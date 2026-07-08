@@ -1,0 +1,27 @@
+# Topic catalog: maps each topic a subscriber can pick to the RSS/Atom feeds
+# that cover it. Add your own topics and feeds freely — topic names are
+# case-insensitive.
+topics:
+  ai:
+    - https://www.technologyreview.com/topic/artificial-intelligence/feed
+    - https://venturebeat.com/category/ai/feed/
+  technology:
+    - https://www.theverge.com/rss/index.xml
+    - https://arstechnica.com/feed/
+  science:
+    - https://www.sciencedaily.com/rss/all.xml
+    - https://www.quantamagazine.org/feed/
+  business:
+    - https://feeds.bbci.co.uk/news/business/rss.xml
+    - https://www.cnbc.com/id/10001147/device/rss/rss.html
+  world:
+    - https://feeds.bbci.co.uk/news/world/rss.xml
+    - https://www.aljazeera.com/xml/rss/all.xml
+  health:
+    - https://www.sciencedaily.com/rss/health_medicine.xml
+  climate:
+    - https://www.theguardian.com/environment/climate-crisis/rss
+  sports:
+    - https://www.espn.com/espn/rss/news
+  gaming:
+    - https://www.polygon.com/rss/index.xml

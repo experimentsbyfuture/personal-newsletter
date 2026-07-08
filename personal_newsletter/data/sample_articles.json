@@ -1,0 +1,66 @@
+[
+  {
+    "title": "Open-source model matches frontier performance on coding benchmarks",
+    "url": "https://example.com/ai/open-source-coding-model",
+    "source": "Sample AI Weekly",
+    "topic": "ai",
+    "summary": "A new openly licensed model posts benchmark scores within a few points of the leading closed models on software engineering tasks, while running on a single consumer GPU.",
+    "published": "2026-07-07T09:00:00Z"
+  },
+  {
+    "title": "EU publishes final guidance on AI transparency requirements",
+    "url": "https://example.com/ai/eu-transparency-guidance",
+    "source": "Sample Policy Desk",
+    "topic": "ai",
+    "summary": "The guidance clarifies what counts as an AI-generated content disclosure and gives companies a twelve-month runway to comply.",
+    "published": "2026-07-06T14:30:00Z"
+  },
+  {
+    "title": "Researchers demonstrate room-temperature quantum memory lasting one hour",
+    "url": "https://example.com/science/quantum-memory",
+    "source": "Sample Science Daily",
+    "topic": "science",
+    "summary": "A team stored quantum states in a doped crystal for over an hour without cryogenic cooling, a major step toward practical quantum networks.",
+    "published": "2026-07-07T08:15:00Z"
+  },
+  {
+    "title": "Ocean survey finds coral recovery in protected reef zones",
+    "url": "https://example.com/science/coral-recovery",
+    "source": "Sample Science Daily",
+    "topic": "science",
+    "summary": "A five-year survey shows coral cover increasing 18% in no-fishing zones, the strongest evidence yet that local protections buy time against warming.",
+    "published": "2026-07-05T11:00:00Z"
+  },
+  {
+    "title": "Chipmaker announces 30% efficiency gain in next-gen mobile processors",
+    "url": "https://example.com/tech/mobile-chip-efficiency",
+    "source": "Sample Tech Report",
+    "topic": "technology",
+    "summary": "The new architecture promises a full extra day of phone battery life, with first devices expected early next year.",
+    "published": "2026-07-07T07:45:00Z"
+  },
+  {
+    "title": "Major browser ships built-in tracker blocking by default",
+    "url": "https://example.com/tech/browser-privacy",
+    "source": "Sample Tech Report",
+    "topic": "technology",
+    "summary": "The change affects roughly a billion users and is expected to reshape how ad networks measure campaigns.",
+    "published": "2026-07-06T16:20:00Z"
+  },
+  {
+    "title": "Global markets steady as inflation cools for third straight month",
+    "url": "https://example.com/business/inflation-cools",
+    "source": "Sample Business Wire",
+    "topic": "business",
+    "summary": "Consumer prices rose at the slowest pace in two years, raising expectations that central banks will hold rates steady through autumn.",
+    "published": "2026-07-07T06:00:00Z"
+  },
+  {
+    "title": "Trial shows once-weekly pill as effective as daily insulin for type 2 diabetes",
+    "url": "https://example.com/health/weekly-diabetes-pill",
+    "source": "Sample Health Journal",
+    "topic": "health",
+    "summary": "In a phase 3 trial of 3,000 patients, the oral drug controlled blood sugar as well as daily injections with fewer side effects.",
+    "published": "2026-07-06T10:00:00Z"
+  }
+]

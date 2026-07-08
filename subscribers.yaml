@@ -1,0 +1,18 @@
+# Each subscriber picks topics (from feeds.yaml) and can describe their
+# interests in plain language — the curator uses that to filter out noise.
+subscribers:
+  - name: Alex
+    email: alex@example.com
+    topics: [ai, technology]
+    interests: >
+      Software engineer. Loves open-source AI and developer tools; not
+      interested in company funding rounds or crypto.
+    max_items: 6
+
+  - name: Sam
+    email: sam@example.com
+    topics: [science, health]
+    interests: >
+      Curious generalist — wants big discoveries explained simply,
+      no academic jargon.
+    max_items: 8

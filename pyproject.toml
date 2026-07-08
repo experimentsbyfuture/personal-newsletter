@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-newsletter"
+version = "0.1.0"
+description = "Personalized newsletters: subscribers pick topics, Claude curates and summarizes what actually matters to them."
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=0.60",
+    "feedparser>=6.0",
+    "jinja2>=3.1",
+    "pydantic>=2.5",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+newsletter = "personal_newsletter.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["personal_newsletter*"]
+
+[tool.setuptools.package-data]
+personal_newsletter = ["templates/*.j2", "data/*.json"]
