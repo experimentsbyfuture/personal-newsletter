@@ -87,11 +87,18 @@ To deliver on a schedule, run `newsletter send` from cron / GitHub Actions
 
 ## Curation
 
-With `ANTHROPIC_API_KEY` set, curation runs on Claude (`claude-opus-4-8`) using
-structured outputs, so the newsletter always comes back as a validated schema
-(subject, intro, sections, per-story summary + "why it matters"). Without a key,
-a heuristic curator (recency + keyword match against the subscriber's interests)
-keeps the pipeline fully functional.
+Curators are tried in order, so the pipeline always works with whatever you have:
+
+1. **Claude API** — with `ANTHROPIC_API_KEY` set, curation runs on
+   `claude-opus-4-8` using structured outputs, so the newsletter always comes
+   back as a validated schema (subject, intro, sections, per-story summary +
+   "why it matters").
+2. **No API key needed** — if the [`claude` CLI](https://claude.com/claude-code)
+   is installed and logged in (covered by a Claude Pro/Max subscription), the
+   same curation runs through it automatically. No per-token billing.
+3. **No Claude at all** — a heuristic curator (recency + keyword match against
+   the subscriber's interests) keeps everything functional; pass `--no-llm` to
+   force it.
 
 ## Development
 

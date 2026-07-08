@@ -1,16 +1,23 @@
 """Turn a pile of candidate articles into a personalized newsletter.
 
-Two curators are available:
+Three curators are available, tried in this order:
 
-- ClaudeCurator: uses the Claude API to pick the stories that actually match the
+- ClaudeCurator: uses the Claude API (needs ANTHROPIC_API_KEY or an
+  `ant auth login` profile) to pick the stories that actually match the
   subscriber's stated interests and write plain-language summaries.
-- HeuristicCurator: no-API fallback that scores by recency and keyword overlap,
-  so the pipeline still works without a key (used for demos/tests too).
+- ClaudeCodeCurator: same quality with NO API key — shells out to the
+  `claude` CLI (Claude Code), which is covered by a Claude Pro/Max
+  subscription.
+- HeuristicCurator: fully offline fallback that scores by recency and keyword
+  overlap, so the pipeline still works with nothing configured.
 """
 
 from __future__ import annotations
 
+import json
 import logging
+import shutil
+import subprocess
 from collections import defaultdict
 from datetime import datetime, timezone
 from typing import List
@@ -100,6 +107,51 @@ class ClaudeCurator:
         return newsletter
 
 
+class ClaudeCodeCurator:
+    """API-key-free curation via the `claude` CLI (Claude Code).
+
+    Uses the user's Claude Code authentication (e.g. a Pro/Max subscription),
+    so no ANTHROPIC_API_KEY is needed. Output is validated against the same
+    Newsletter schema as the API curator.
+    """
+
+    def __init__(self, timeout: int = 300):
+        self.timeout = timeout
+
+    def curate(self, subscriber: Subscriber, articles: List[Article]) -> Newsletter:
+        candidates = articles[:MAX_CANDIDATES]
+        schema = json.dumps(Newsletter.model_json_schema(), indent=None)
+        prompt = (
+            f"{SYSTEM_PROMPT}\n\n"
+            "Subscriber profile:\n"
+            f"{_profile_block(subscriber)}\n\n"
+            f"Candidate articles ({len(candidates)}):\n"
+            f"{_articles_block(candidates)}\n\n"
+            "Produce this subscriber's newsletter. Respond with ONLY a JSON object "
+            f"matching this JSON schema (no prose, no code fences):\n{schema}"
+        )
+        result = subprocess.run(
+            ["claude", "-p", prompt, "--output-format", "text"],
+            capture_output=True,
+            text=True,
+            timeout=self.timeout,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"claude CLI failed: {result.stderr.strip()[:500]}")
+        return Newsletter.model_validate_json(_extract_json(result.stdout))
+
+
+def _extract_json(text: str) -> str:
+    """Pull the JSON object out of CLI output that may have fences or preamble."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.strip("`").removeprefix("json").strip()
+    start, end = text.find("{"), text.rfind("}")
+    if start == -1 or end == -1:
+        raise RuntimeError(f"No JSON object in claude CLI output: {text[:200]!r}")
+    return text[start : end + 1]
+
+
 class HeuristicCurator:
     """Keyword/recency fallback used when no API key is available."""
 
@@ -171,5 +223,9 @@ def get_curator(use_llm: bool = True):
             raise anthropic.AnthropicError("no credentials")
         return ClaudeCurator(client)
     except Exception:
-        logger.warning("No Anthropic credentials found - falling back to heuristic curation")
-        return HeuristicCurator()
+        pass
+    if shutil.which("claude"):
+        logger.warning("No API credentials - using the `claude` CLI (subscription auth)")
+        return ClaudeCodeCurator()
+    logger.warning("No Anthropic credentials or claude CLI - falling back to heuristic curation")
+    return HeuristicCurator()
