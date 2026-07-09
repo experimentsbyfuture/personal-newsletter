@@ -71,19 +71,40 @@ curation without an API key), `--max-age-days N` (freshness window).
 
 ## Sending email
 
-`newsletter send` uses SMTP, configured via environment variables:
+`newsletter send` picks a backend automatically:
+
+**Resend (recommended — free tier, one API call):**
 
 ```bash
-export SMTP_HOST=smtp.example.com
-export SMTP_PORT=587
-export SMTP_USER=you@example.com
-export SMTP_PASSWORD=...
+export RESEND_API_KEY=re_...
+export FROM_EMAIL="Your Newsletter <news@yourdomain.com>"  # verified in Resend
+newsletter send
+```
+
+**Plain SMTP:**
+
+```bash
+export SMTP_HOST=smtp.example.com SMTP_PORT=587
+export SMTP_USER=you@example.com SMTP_PASSWORD=...
 export FROM_EMAIL="Your Newsletter <you@example.com>"
 newsletter send
 ```
 
-To deliver on a schedule, run `newsletter send` from cron / GitHub Actions
-(e.g. `0 7 * * MON` for a Monday-morning edition).
+## Daily delivery (zero servers)
+
+The repo ships a GitHub Actions workflow
+(`.github/workflows/daily-newsletter.yml`) that emails every subscriber once a
+day. To turn it on, add three repository secrets under **Settings → Secrets
+and variables → Actions**:
+
+| Secret | Value |
+|---|---|
+| `ANTHROPIC_API_KEY` | your Anthropic API key |
+| `RESEND_API_KEY` | free key from [resend.com](https://resend.com) |
+| `FROM_EMAIL` | a sender verified in Resend |
+
+Then use the workflow's **Run workflow** button for a test send. Adjust the
+cron in the workflow file to change the delivery time.
 
 ## Curation
 

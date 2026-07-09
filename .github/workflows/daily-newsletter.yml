@@ -1,0 +1,34 @@
+# Sends every subscriber their personalized newsletter once a day.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   ANTHROPIC_API_KEY  - for Claude curation
+#   RESEND_API_KEY     - free tier at https://resend.com
+#   FROM_EMAIL         - a sender verified in Resend, e.g. "News <news@yourdomain.com>"
+#
+# The "Run workflow" button (workflow_dispatch) lets you test a send any time.
+name: Daily newsletter
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # 12:00 UTC daily — adjust to your audience's morning
+  workflow_dispatch: {}
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install .
+
+      - name: Build and send newsletters
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+        run: newsletter send --max-age-days 1

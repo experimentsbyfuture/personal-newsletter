@@ -100,3 +100,44 @@ def test_render_escapes_html(subscriber):
     newsletter = HeuristicCurator().curate(subscriber, articles)
     html = render_html(newsletter, subscriber)
     assert "<script>" not in html
+
+
+def test_send_email_prefers_resend(monkeypatch, subscriber):
+    from personal_newsletter import sender
+
+    sent = {}
+
+    def fake_urlopen(request, timeout=None):
+        import json as _json
+
+        sent.update(_json.loads(request.data))
+        sent["auth"] = request.get_header("Authorization")
+
+        class Resp:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        return Resp()
+
+    monkeypatch.setenv("RESEND_API_KEY", "re_test")
+    monkeypatch.setenv("FROM_EMAIL", "News <news@example.com>")
+    monkeypatch.setattr(sender.urllib.request, "urlopen", fake_urlopen)
+
+    sender.send_email(subscriber, "Hello", "<p>hi</p>", "hi")
+    assert sent["to"] == ["alex@example.com"]
+    assert sent["subject"] == "Hello"
+    assert sent["auth"] == "Bearer re_test"
+
+
+def test_send_email_smtp_requires_config(monkeypatch, subscriber):
+    from personal_newsletter import sender
+
+    for var in ("RESEND_API_KEY", "SMTP_HOST", "SMTP_USER", "SMTP_PASSWORD", "FROM_EMAIL"):
+        monkeypatch.delenv(var, raising=False)
+    with pytest.raises(sender.SenderConfigError):
+        sender.send_email(subscriber, "Hello", "<p>hi</p>", "hi")
