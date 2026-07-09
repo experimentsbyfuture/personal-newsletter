@@ -18,6 +18,35 @@ feeds.yaml (topic → RSS feeds)          subscribers.yaml (who wants what)
           HTML email → preview locally or send via SMTP
 ```
 
+## Use it as a Claude Skill (no install, no server, no API key)
+
+Anyone with Claude can get their own personal newsletter straight from this
+repo — their Claude does the searching and curating, on their subscription:
+
+```
+/plugin marketplace add experimentsbyfuture/personal-newsletter
+/plugin install personal-newsletter@personal-newsletter
+```
+
+Then ask for `/personal-newsletter:news` (or just say "give me my news
+digest"). The first run interviews you — topics, interests in your own words,
+how many stories — and saves a profile at `~/.personal-newsletter/profile.md`.
+Every run after that is a fresh, personalized digest. Say "no more crypto" or
+"more science" any time and it updates your profile.
+
+Prefer a bare skill instead of a plugin? Copy the folder:
+
+```bash
+cp -r plugins/personal-newsletter/skills/news ~/.claude/skills/
+# then: /news
+```
+
+For an automatic daily edition, schedule it — e.g. a Claude Code routine, or
+a cron entry running `claude -p "/news"`.
+
+Everything below is the standalone pipeline for *emailing* newsletters to
+other people (subscribers who don't use Claude).
+
 ## Quick start
 
 ```bash
